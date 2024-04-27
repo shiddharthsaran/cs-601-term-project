@@ -1,0 +1,22 @@
+#stockDetails{
+    display: none;
+}
+
+div p{
+    padding-left: 20px;
+}
+
+div div{
+    margin-bottom: 30px;
+}
+
+div h3{
+    margin-bottom: 20px;
+}
+div ul{
+    padding-left: 50px;
+}
+
+ul li::marker{
+    content:none;
+}
