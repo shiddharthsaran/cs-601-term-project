@@ -177,6 +177,21 @@ export function getStockTimeSeries(url, flag) {
 
 }
 
+export function getLogoImage(ticker){
+    requestHeader.set('X-Api-Key', 'G/2qY/PHtg4XnsqAAjYEaw==i6SuCgt2h6RWpmrw')
+    const url = 'https://api.api-ninjas.com/v1/logo?ticker=' + ticker
+    fetch(url,{url:url, headers:requestHeader})
+    .then(response => {
+        return response.json();
+    })
+    .then(data => {
+        const imgSrc = data[0].image;
+        console.log(data);
+        const stockLogo = document.getElementById("stockLogo");
+        stockLogo.src = imgSrc;
+    })
+}
+
 export function getStockDetails(userInput){
     if(userInput.length > 0){
         const url = "https://api.polygon.io/v3/reference/tickers/" + userInput + "?apiKey=" + API_KEY;
@@ -196,6 +211,7 @@ export function getStockDetails(userInput){
             const formattedThirtyDaysAgo = formatDate(thirtyDaysAgo);
             const urlTimeSeries = "https://api.polygon.io/v2/aggs/ticker/"+ userInput +"/range/1/day/"+ formattedThirtyDaysAgo +"/" + formattedCurrDate + "?adjusted=true&sort=desc&limit=30&apiKey=" + API_KEY;
             getStockTimeSeries(urlTimeSeries, true);
+            getLogoImage(userInput);
             document.getElementById('stockName').innerText = stockResults.name;
             document.getElementById('listDate').innerText = "List Date: " + stockResults.list_date;
             document.getElementById('tickerSymbol').innerText = "Ticker Symbol: " + stockResults.ticker;

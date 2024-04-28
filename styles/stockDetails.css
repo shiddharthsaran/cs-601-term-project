@@ -1,3 +1,12 @@
-#buyDiv{
+#buyDiv, #sellDiv{
     display: none;
+}
+
+#stockNameLogo{
+    display: flex;
+}
+
+img{
+    height: 32px;
+    width: auto;
 }

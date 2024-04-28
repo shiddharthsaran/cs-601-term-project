@@ -12,41 +12,53 @@
   <body>
 	<a id="homeBtn" href="index.html" class="btn btn-dark">Home</a>
     <div id="stockDetails">
-      <h2 id="stockName"></h2>
-      <h2>Description:</h2>
-      <p id="description"></p>
-  
-      <div></div>
-  
-      <h3 id="listDate"></h3>
-      <h3 id="tickerSymbol"></h3>
-      <h3 id="marketCap"></h3>
-  
-      <h3>Latest Stock Price Details:</h3>
-      <ul>
-          <li id="date"></li>
-          <li id="op"></li>
-          <li id="hp"></li>
-          <li id="lp"></li>
-          <li id="cp"></li>
-      </ul>
-      <div id="buySellBtns">
-        <button id="buyBtn" class="btn btn-primary">Buy</button>
-        <button id="sellBtn" class="btn btn-warning">Sell</button>
-      </div>
-      <div id="buyDiv">
-        <label for="stockQuantity">Select Stock Quantity to buy:</label>
-        <input id="stockQuantity" type="number" step="0.1" min="0.1" value="0.1">
-        <button id="checkoutBtn" class="btn btn-success">Checkout</button>
-        <p id="stockBuyMsg"></p>
-      </div>
-      <div id="candlestickChartContainer" style="width: 800px; height: 400px;"></div>
-      <input type="date" id="startDate">
-      <input type="date" id="endDate">
-      <button class="btn btn-secondary" id="timeSeriesBtn">Submit</button>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script type="module">
+		<div id="stockNameLogo">
+			<img src="" id="stockLogo" alt="Stock Logo">
+			<h2 id="stockName"></h2>
+			
+		</div>
+		<h2>Description:</h2>
+		<p id="description"></p>
+	
+		<div></div>
+	
+		<h3 id="listDate"></h3>
+		<h3 id="tickerSymbol"></h3>
+		<h3 id="marketCap"></h3>
+	
+		<h3>Latest Stock Price Details:</h3>
+		<ul>
+			<li id="date"></li>
+			<li id="op"></li>
+			<li id="hp"></li>
+			<li id="lp"></li>
+			<li id="cp"></li>
+		</ul>
+		<div id="buySellBtns">
+			<button id="buyBtn" class="btn btn-primary">Buy</button>
+			<button id="sellBtn" class="btn btn-warning">Sell</button>
+		</div>
+		<div id="buyDiv">
+			<label for="stockQuantity">Select Stock Quantity to buy:</label>
+			<input id="stockQuantity" type="number" step="0.1" min="0.1" value="0.1">
+			<button id="checkoutBtn" class="btn btn-success">Checkout</button>
+			<button id="buyBackBtn" class="btn btn-light">Back</button>
+			<p id="stockBuyMsg"></p>
+		</div>
+		<div id="sellDiv">
+			<label for="stockSellQuantity">Select Stock Quantity to sell:</label>
+			<input id="stockSellQuantity" type="number" min="0.1" step="0.1">
+			<button id="sellConfirmBtn" class="btn btn-success">Confirm</button>
+			<button id="sellBackBtn" class="btn btn-light">Back</button>
+			<p id="stockSellMsg"></p>
+		</div>
+		<div id="candlestickChartContainer" style="width: 800px; height: 400px;"></div>
+		<input type="date" id="startDate">
+		<input type="date" id="endDate">
+		<button class="btn btn-secondary" id="timeSeriesBtn">Submit</button>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+		<script type="module">
         import {getStockDetails} from './modules/main.js'
         import {getStockTimeSeries} from './modules/main.js'
         import {checkStartEndDate} from './modules/main.js'
@@ -57,9 +69,17 @@
 			const sellBtn = document.getElementById("sellBtn");
 			const buySellBtns = document.getElementById("buySellBtns");
 			const buyDiv = document.getElementById("buyDiv");
+			const sellDiv = document.getElementById("sellDiv");
 			const checkoutBtn = document.getElementById("checkoutBtn");
 			const homeBtn = document.getElementById("homeBtn");
+			const buyBackBtn = document.getElementById("buyBackBtn");
+			const sellBackBtn = document.getElementById("sellBackBtn");
+			const stockSellQuantity = document.getElementById("stockSellQuantity");
+			const sellConfirmBtn = document.getElementById("sellConfirmBtn");
+			const stockSellMsg = document.getElementById("stockSellMsg");
+			const stockLogo = document.getElementById("stockLogo");
 			let localUserDetails = JSON.parse(localStorage.getItem('userDetails'));
+			
 			let params = new URLSearchParams(window.location.search);
 			let ticker = params.get("ticker");
 			getStockDetails(ticker);
@@ -90,33 +110,101 @@
 			homeBtn.addEventListener("click", () => {
 
 			})
-			checkoutBtn.addEventListener("click", function(){
-			const stockQuantityVal = Number(stockQuantity.value);
-			const latestClosePrice = Number(document.getElementById("cp").innerText.replace("Close Price: ",""));
-			if (stockQuantityVal <= 0){
-				stockBuyMsg.innerText = "Enter a value greater than 0.";
+			if(localUserDetails['userStocks'].hasOwnProperty(ticker)){
+				if(localUserDetails['userStocks'][ticker] <= 0){
+					sellBtn.style.display = "none";
+				}
 			}
 			else{
-				let totalBuyAmount = stockQuantityVal * latestClosePrice;
-				if((totalBuyAmount) < Number(localUserDetails['userAmount'])){
-					localUserDetails['userAmount'] = localUserDetails['userAmount'] - totalBuyAmount;
-					if(localUserDetails['userStocks'].hasOwnProperty(ticker)){
-						localUserDetails['userStocks'][ticker] += stockQuantityVal;
+				sellBtn.style.display = "none";	
+			}
+			checkoutBtn.addEventListener("click", function(){
+				const stockQuantityVal = Number(stockQuantity.value);
+				const latestClosePrice = Number(document.getElementById("cp").innerText.replace("Close Price: ",""));
+				if (stockQuantityVal <= 0){
+					stockBuyMsg.innerText = "Enter a value greater than 0.";
+				}
+				else{
+					let totalBuyAmount = stockQuantityVal * latestClosePrice;
+					if((totalBuyAmount) < Number(localUserDetails['userAmount'])){
+						localUserDetails['userAmount'] = localUserDetails['userAmount'] - totalBuyAmount;
+						if(localUserDetails['userStocks'].hasOwnProperty(ticker)){
+							localUserDetails['userStocks'][ticker] += stockQuantityVal;
+							
+						}
+						else{
+							localUserDetails['userStocks'][ticker] = stockQuantityVal;
+						}
+						localStorage.setItem('userDetails',JSON.stringify(localUserDetails));
+						stockBuyMsg.innerText = "Transaction Completed Successfully.";
 						
 					}
 					else{
-						localUserDetails['userStocks'][ticker] = stockQuantityVal;
+						stockBuyMsg.innerText = "Amount not enough to buy the number of stock units selected.";
 					}
-					localStorage.setItem('userDetails',JSON.stringify(localUserDetails));
-					stockBuyMsg.innerText = "Transaction Completed Successfully.";
 					
 				}
-				else{
-					stockBuyMsg.innerText = "Amount not enough to buy the number of stock units selected.";
-				}
-				
-			}
 			})
+
+			buyBackBtn.addEventListener("click", function(){
+				buySellBtns.style.display = "block";
+				buyDiv.style.display = "none";
+				if(localUserDetails['userStocks'].hasOwnProperty(ticker)){
+					if(localUserDetails['userStocks'][ticker] > 0){
+						sellBtn.style.display = "inline";
+					}
+				}
+				stockBuyMsg.innerText = "";
+				stockQuantity.value = 0.1;
+
+			})
+
+			sellBackBtn.addEventListener("click", function(){
+				buySellBtns.style.display = "block";
+				sellDiv.style.display = "none";
+				if(localUserDetails['userStocks'].hasOwnProperty(ticker)){
+					if(localUserDetails['userStocks'][ticker] <= 0){
+						sellBtn.style.display = "none";
+						stockSellQuantity.value = 0;
+					}
+					else{
+						stockSellQuantity.value = localUserDetails['userStocks'][ticker];
+					}
+				}
+				else{
+					sellBtn.style.display = "none";
+				}
+				stockSellMsg.innerText = "";
+				
+			})
+
+			sellBtn.addEventListener("click", () => {
+				buySellBtns.style.display = "none";
+				sellDiv.style.display = "block";
+				stockSellQuantity.value = localUserDetails['userStocks'][ticker];
+
+			})
+			sellConfirmBtn.addEventListener("click", function(){
+				const stockSellQuantityVal = Number(stockSellQuantity.value);
+				const latestClosePrice = Number(document.getElementById("cp").innerText.replace("Close Price: ",""));
+				
+				if(stockSellQuantityVal <= localUserDetails['userStocks'][ticker]){
+					localUserDetails['userStocks'][ticker] -= stockSellQuantityVal;
+					localUserDetails['userAmount'] += stockSellQuantityVal * latestClosePrice;
+					if(localUserDetails['userStocks'][ticker] == 0){
+						delete localUserDetails['userStocks'][ticker];
+					}
+					localStorage.setItem('userDetails',JSON.stringify(localUserDetails));
+					stockSellMsg.innerText = "Transaction Completed Successfully.";
+				}
+				else{
+					stockSellMsg.innerText = "Selected number of stock units is greater than avaible stock units in user portfolio."
+				}
+
+			})
+
+
+
 
         })
         

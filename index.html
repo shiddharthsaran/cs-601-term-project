@@ -12,7 +12,7 @@
     <h1 id="searchTitle">Stock Search</h1>
     <input type="text" id="searchInput" placeholder="Search for Stocks">
     <ul id="searchSuggestions"></ul>
-    <a href="" id="searchBtn" class="btn btn-primary">Search</a>
+    <a href="#" id="searchBtn" class="btn btn-primary">Search</a>
     
     <div class="form-check form-switch">
       <input class="form-check-input" type="checkbox" role="switch" id="stockUserSearch">
@@ -113,6 +113,14 @@
 
         }
         chartDates.reverse();
+		let chartData = [{
+			type:"scatter",
+			mode:"lines",
+			name:"",
+			x:chartDates,
+			y:[null,null,null,null,null]
+		}]
+		Plotly.newPlot('portfolioGraph', chartData);
         if(Object.keys(userStocks).length > 0){
           Object.keys(userStocks).forEach(ticker => {
 			if(userStocks[ticker] > 0){
@@ -126,17 +134,7 @@
             Plotly.newPlot('portfolioGraph', chartData);
           })          
         }
-        else{
-          let chartData = [{
-            type:"scatter",
-            mode:"lines",
-            name:"",
-            x:chartDates,
-            y:[null,null,null,null,null]
-          }]
-          Plotly.newPlot('portfolioGraph', chartData);
-
-        }
+        
         
       })
           
