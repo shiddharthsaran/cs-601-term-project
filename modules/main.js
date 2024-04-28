@@ -18,14 +18,14 @@ export function getStockSearch(userInput){
             while (ul.firstChild) {
                 ul.removeChild(ul.lastChild);
                 }
-            document.getElementById("aSearchVal").href = "stockDetails.html?ticker="+data.results[0].ticker;
+            document.getElementById("searchBtn").href = "stockDetails.html?ticker="+data.results[0].ticker;
 
             data.results.forEach(element => {
                 const li = document.createElement("li");
                 li.innerText = element.ticker;
                 li.addEventListener("click", function(){
                     document.getElementById("searchInput").value = li.innerText;
-                    document.getElementById("aSearchVal").href = "stockDetails.html?ticker="+li.innerText;
+                    document.getElementById("searchBtn").href = "stockDetails.html?ticker="+li.innerText;
                     while (ul.firstChild) {
                         ul.removeChild(ul.lastChild);
                         }
@@ -205,4 +205,36 @@ export function getStockDetails(userInput){
             return data;
         })
     }
+}
+
+
+export function getStockPrices(ticker, chartDates){
+    const url = "https://api.polygon.io/v2/aggs/ticker/"+ ticker +"/range/1/day/"+ chartDates[0] +"/"+ chartDates[chartDates.length - 1] +"?adjusted=true&sort=asc&apiKey="+API_KEY;
+    // let chartData = [];
+    return fetch(url, {url:url, headers:requestHeader})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json()
+    })
+    .then(data => {
+        let stockPrices = [];
+        
+        data.results.forEach(result => {
+            stockPrices.push(result.c);
+        })
+        // console.log(stockPrices);
+        return {
+            type:"scatter",
+            mode:"lines",
+            name:ticker,
+            x:chartDates,
+            y:stockPrices
+        }
+        
+    })
+
+    
+
 }
