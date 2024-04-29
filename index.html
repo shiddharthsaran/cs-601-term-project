@@ -12,7 +12,7 @@
 	<div class="container align-items-center justify-content-center wrapper text-white bg-dark">
 		<div class="row">
 			<div class="justify-content-center align-items-center d-flex">
-				<img src="./static/images/Designer.jpeg" class="img-fluid">
+				<img src="./static/images/Designer.jpeg" class="img-fluid" alt="logo">
 			</div>
 			<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
 				<div>
@@ -30,10 +30,7 @@
 				<input type="text" id="searchInput" class="input-css" placeholder="Search for Stocks">
 				<ul id="searchSuggestions"></ul>
 				<a href="#" id="searchBtn" class="btn btn-primary btn-full">Search</a>
-				<div class="form-check form-switch">
-					<input class="form-check-input" type="checkbox" role="switch" id="stockUserSearch">
-				</div>
-	
+				
 			</div>
 			<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
 				<div id="portfolioGraph"></div>
@@ -48,13 +45,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script type="module">
       import {getStockSearch} from './modules/main.js';
-      import {getUserSearch} from './modules/main.js';
       import {formatDate} from './modules/main.js';
       import {getStockPrices} from './modules/main.js';
      
       document.addEventListener("DOMContentLoaded", function(){
         const searchInput = document.getElementById("searchInput");
-        const stockUserSearch = document.getElementById("stockUserSearch");
         const searchTitle = document.getElementById("searchTitle");
         const searchSuggestions = document.getElementById("searchSuggestions");
         const searchBtn = document.getElementById("searchBtn");
@@ -78,36 +73,11 @@
 			}
           
         };
-        let stockUserSearchBool = true;
-		
-        stockUserSearch.addEventListener("click", () => {
-          if(stockUserSearchBool){
-            searchTitle.innerText = "User Search";
-            searchInput.placeholder = "Search for Users";
-            stockUserSearchBool = false;
-            searchInput.value = "";
-            while (searchSuggestions.firstChild) {
-              searchSuggestions.removeChild(searchSuggestions.lastChild);
-            }
-          }
-          else{
-            searchTitle.innerText = "Stock Search";
-            searchInput.placeholder = "Search for Stocks";
-            stockUserSearchBool = true;
-            searchInput.value = "";
-            while (searchSuggestions.firstChild) {
-              searchSuggestions.removeChild(searchSuggestions.lastChild);
-            }
-          }
-        })
+        
         searchInput.addEventListener("keyup", function(){
           const userInput = searchInput.value;
-          if(stockUserSearchBool){
-            getStockSearch(userInput);
-          }
-          else{
-            getUserSearch(userInput);
-          }
+		  getStockSearch(userInput);
+         
           
         })
         

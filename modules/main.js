@@ -59,53 +59,7 @@ export function getStockSearch(userInput){
     
 }
 
-export function getUserSearch(userInput){
-    if(userInput.length > 0){
-        const url = "https://dummyjson.com/users/search?q="+userInput+"&limit=5";
-        fetch(url,{url:url, headers:requestHeader})
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json()
 
-        })
-        .then(data=>{
-            const ul = document.getElementById("searchSuggestions");
-            while (ul.firstChild) {
-                ul.removeChild(ul.lastChild);
-                }
-            if(data.users.length > 0){
-                document.getElementById("searchBtn").href = "userDetails.html?user="+data.users[0].firstName + " " + data.users[0].lastName;
-
-            }
-            data.users.forEach(element => {
-                console.log(element);
-                const li = document.createElement("li");
-                li.innerText = element.firstName + " " + element.lastName;
-                li.addEventListener("click", function(){
-                    document.getElementById("searchInput").value = li.innerText;
-                    document.getElementById("searchBtn").href = "userDetails.html?user="+li.innerText;
-                    
-                    while (ul.firstChild) {
-                        ul.removeChild(ul.lastChild);
-                        }
-                })
-                ul.appendChild(li);
-            });
-
-            return data;
-        })
-
-    }
-    else{
-        const ul = document.getElementById("searchSuggestions");
-
-        while (ul.firstChild) {
-            ul.removeChild(ul.lastChild);
-            }
-    }
-}
 
 export function formatDate(date) {
     const year = date.getFullYear();
@@ -264,15 +218,10 @@ export function getStockPrices(ticker, chartDates, tickerUnits){
     })
     .then(data => {
         let stockPrices = [];
-        // let localPortfolioDetails = JSON.parse(localStorage.getItem('portfolioDetails'));
         data.results.forEach(result => {
             stockPrices.push(result.c);
         })
-        // localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'] += data.results[data.results.length - 1].c * tickerUnits;
-        // localStorage.setItem('portfolioDetails',JSON.stringify(localPortfolioDetails));
-        // document.getElementById("portfolioValue").innerText = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'];
-
-        // console.log(stockPrices);
+    
         return {
             type:"scatter",
             mode:"lines",

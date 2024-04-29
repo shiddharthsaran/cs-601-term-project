@@ -16,12 +16,9 @@ ul li::marker{
     content:none;
     padding-top: 2px;
     padding-bottom: 2px;
-
 }
 
-body{
-    height: 100vh;
-}
+
 .container{
     height: 100%;
 }
@@ -52,13 +49,23 @@ input.input-css{
     background-color: white;
     color: black;
     border-radius: 1rem;
+    text-align: center;
+
     
 }
 
 input.input-css + ul li{
     padding-left: 10px;
+    
 }
 
+
+div #searchTitle + input + ul li{
+    text-align: center;
+}
+#searchTitle + input{
+    text-align: center;
+}
 .portfolioHighlight{
     color:#0d6efd;
     font-size: 20px;
@@ -96,4 +103,21 @@ div > p{
 
 #portfolioValue{
     font-size: 20px;
+}
+
+input:focus{
+    background-color: black;
+    color: white;
+}
+
+#portfolios + button{
+    width: 100%;
+}
+
+button + ul{
+    padding: 5px;
+}
+
+span + .btn-danger{
+    font-size: 1.1rem;
 }

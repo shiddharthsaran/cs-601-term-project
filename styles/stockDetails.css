@@ -1,11 +1,13 @@
 #buyDiv, #sellDiv{
     display: none;
 }
-
 #stockNameLogo, #buySellBtns{
     display: flex;
 }
 
+img + p{
+    font-size: 32px;
+}
 img{
     height: 32px;
     width: auto;
@@ -39,3 +41,74 @@ div div.timeSeriesError{
     
 
 }
+
+
+
+
+div.descrip > p:not(:first-child)::first-letter{
+    color: grey;
+}
+
+#listDate::after{
+    content: " is the date the company was listed";
+}
+
+ul li::marker{
+    color: grey;
+}
+
+
+ul li:not(:first-child)::after{
+    content: " USD";
+}
+
+p:hover{
+    background-color: white;
+    color: black;
+}
+
+li:hover{
+    background-color: white;
+    color: black;
+}
+
+li:empty{
+    background-color: grey;
+}
+
+div:hover{
+    background-color: black;
+}
+
+
+div.descrip > p:first-child{
+    font-size: 32px;
+}
+
+div.descrip > p:not(:first-child){
+    font-size: 18px;
+}
+
+
+div.descrip > p:first-child + p {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+p + p{
+    font-weight: bold;
+}
+
+p + ul{
+    border: 2px solid white; 
+}
+
+label + input{
+    background-color: black;
+    color: white;
+    border: 2px solid white
+}
+div + div{
+    padding-bottom: 2px;
+}
+
