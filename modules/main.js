@@ -26,6 +26,7 @@ export function getStockSearch(userInput){
 
             data.results.forEach(element => {
                 const li = document.createElement("li");
+                
                 li.innerText = element.ticker;
                 li.addEventListener("click", function(){
                     document.getElementById("searchInput").value = li.innerText;
@@ -33,6 +34,12 @@ export function getStockSearch(userInput){
                     while (ul.firstChild) {
                         ul.removeChild(ul.lastChild);
                         }
+                })
+                li.addEventListener("mouseover", () => {
+                    li.classList.add("searchHighlight");
+                })
+                li.addEventListener("mouseout", () => {
+                    li.classList.remove("searchHighlight");
                 })
                 ul.appendChild(li);
             });
@@ -47,7 +54,6 @@ export function getStockSearch(userInput){
         while (ul.firstChild) {
             ul.removeChild(ul.lastChild);
             }
-        // document.getElementById('stockDetails').style.display = "none";
 
     }
     

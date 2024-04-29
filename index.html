@@ -8,30 +8,43 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link href="./styles/main.css" rel="stylesheet">
   </head>
-  <body>
-	<div id="portfolios">
-		<button class="btn btn-success" id="addPortfolio">Add</button>
-		<ul id="portfolioLis">
-			<!-- <li id="portfolio1"><span>Portfolio 1</span><button class="btn btn-danger" id="deletePortfolio">Del</button></li> -->
-			
-		</ul>
+  <body class="bg-black">
+	<div class="container align-items-center justify-content-center wrapper text-white bg-dark">
+		<div class="row">
+			<div class="justify-content-center align-items-center d-flex">
+				<img src="./static/images/Designer.jpeg" class="img-fluid">
+			</div>
+			<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+				<div>
+					<div id="portfolios"></div>
+					<button class="btn btn-success" id="addPortfolio">Add</button>
+					<ul id="portfolioLis"></ul>
+					<p id="portfolioValue"></p>
+					<p id="userAmount"></p>
+
+				</div>
+				
+			</div>
+			<div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+				<p id="searchTitle">Stock Search</p>
+				<input type="text" id="searchInput" class="input-css" placeholder="Search for Stocks">
+				<ul id="searchSuggestions"></ul>
+				<a href="#" id="searchBtn" class="btn btn-primary btn-full">Search</a>
+				<div class="form-check form-switch">
+					<input class="form-check-input" type="checkbox" role="switch" id="stockUserSearch">
+				</div>
+	
+			</div>
+			<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">
+				<div id="portfolioGraph"></div>
+			</div>
+	
+		</div>
+
 	</div>
-	<h4 id="portfolioValue"></h4>
-	<h4 id="userAmount"></h4>
-    <h1 id="searchTitle">Stock Search</h1>
-    <input type="text" id="searchInput" placeholder="Search for Stocks">
-    <ul id="searchSuggestions"></ul>
-    <a href="#" id="searchBtn" class="btn btn-primary">Search</a>
-    
-    <div class="form-check form-switch">
-      <input class="form-check-input" type="checkbox" role="switch" id="stockUserSearch">
-    </div>
-    <div id="portfolioGraph" style="width: 400px; height: 400px;"></div>
+	
+	
 
-
-    <!-- <h1>User Search</h1>
-    <input type="text" id="userSearch">
-    <ul id="userSuggestions"></ul> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script type="module">
       import {getStockSearch} from './modules/main.js';
@@ -97,24 +110,7 @@
           }
           
         })
-        // searchBtn.addEventListener("click", function(){
-        //   const firstSuggestion = document.getElementById("searchSuggestions").firstChild;
-        //   let userInput;
-        //   if(firstSuggestion == null){
-        //     userInput = searchInput.value;
-        //   }
-        //   else{
-        //     userInput = firstSuggestion.innerText;
-        //   }
-        //   if (userInput.length > 0){
-        //     if(stockUserSearchBool){
-        //       console.log("stock " + userInput);
-        //     }
-        //     else{
-        //       console.log("user " + userInput);
-        //     }
-        //   }
-        // })
+        
         let localPortfolioDetails = JSON.parse(localStorage.getItem('portfolioDetails'));
         if(localPortfolioDetails == null){
           localStorage.setItem('portfolioDetails',JSON.stringify(portfolioDetails));
@@ -133,10 +129,10 @@
 				if(keyVal == localPortfolioDetails['currentPortfolioId']){
 					const span = document.createElement("span");
 					span.innerText = "Porfolio " + keyVal;
+					span.classList.add('currentPortfolioHighlight');
 					span.addEventListener("click", function(){
 						localPortfolioDetails["currentPortfolioId"] = keyVal;
 						localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
-						// console.log(localStorage.getItem("portfolioDetails"));
 						location.reload();
 					})
 					li.appendChild(span);
@@ -149,8 +145,13 @@
 					span.addEventListener("click", function(){
 						localPortfolioDetails["currentPortfolioId"] = keyVal;
 						localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
-						// console.log(localStorage.getItem("portfolioDetails"));
 						location.reload();
+					})
+					span.addEventListener("mouseover", () => {
+						span.classList.add("portfolioHighlight");
+					})
+					span.addEventListener("mouseout", () => {
+						span.classList.remove("portfolioHighlight");
 					})
 					const delBtn = document.createElement("button");
 					delBtn.classList.add("btn");
@@ -184,15 +185,19 @@
 					}
 					const li = document.createElement("li");
 			li.id = "portfolio" + localPortfolioDetails['portfolioId'];
-			// li.innerHTML = "<span>Porfolio " + localPortfolioDetails['portfolioId'] + "</span><button class='btn btn-danger' id='deletePortfolio'>Del</button>"
 			const span = document.createElement("span");
 			const tempId = localPortfolioDetails['portfolioId'];
 			span.innerText = "Porfolio " + tempId;
 			span.addEventListener("click", function(){
 				localPortfolioDetails["currentPortfolioId"] = tempId;
 				localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
-				// console.log(localStorage.getItem("portfolioDetails"));
 				location.reload();
+			})
+			span.addEventListener("mouseover", () => {
+				span.classList.add("portfolioHighlight");
+			})
+			span.addEventListener("mouseout", () => {
+				span.classList.remove("portfolioHighlight");
 			})
 			const delBtn = document.createElement("button");
 			delBtn.classList.add("btn");
@@ -220,14 +225,10 @@
 			
 			
 		})
-		// const deletePortfolio = document.getElementById("");
-		// deletePortfolio.addEventListener("click", () => {
-		// 	console.log(this.id);
-		// })
-		// console.log(localPortfolioDetails);
+		
         let userStocks = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userStocks'];
-		userAmount.innerText = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userAmount'].toFixed(2);
-		portfolioValue.innerText = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'].toFixed(2);
+		userAmount.innerText = "Amount Left: $" + localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userAmount'].toFixed(2);
+		portfolioValue.innerText = "Portfolio Value: $" + localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'].toFixed(2);
 		let totalPortfolioVal = 0;
 		
         let chartDates = [];
