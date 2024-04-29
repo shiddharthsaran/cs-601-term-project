@@ -18,7 +18,11 @@ export function getStockSearch(userInput){
             while (ul.firstChild) {
                 ul.removeChild(ul.lastChild);
                 }
-            document.getElementById("searchBtn").href = "stockDetails.html?ticker="+data.results[0].ticker;
+            if(data.results.length > 0){
+                document.getElementById("searchBtn").href = "stockDetails.html?ticker="+data.results[0].ticker;
+
+
+            }
 
             data.results.forEach(element => {
                 const li = document.createElement("li");
@@ -65,11 +69,17 @@ export function getUserSearch(userInput){
             while (ul.firstChild) {
                 ul.removeChild(ul.lastChild);
                 }
+            if(data.users.length > 0){
+                document.getElementById("searchBtn").href = "userDetails.html?user="+data.users[0].firstName + " " + data.users[0].lastName;
+
+            }
             data.users.forEach(element => {
+                console.log(element);
                 const li = document.createElement("li");
                 li.innerText = element.firstName + " " + element.lastName;
                 li.addEventListener("click", function(){
                     document.getElementById("searchInput").value = li.innerText;
+                    document.getElementById("searchBtn").href = "userDetails.html?user="+li.innerText;
                     
                     while (ul.firstChild) {
                         ul.removeChild(ul.lastChild);
@@ -99,34 +109,41 @@ export function formatDate(date) {
 }
 
 export function checkStartEndDate(sDate, eDate){
+    if(sDate.length ==0 || eDate.length == 0){
+        document.getElementById("timeSeriesError").innerText = "Enter Dates."
+        return false;
+    }
     const startDate = new Date(sDate);
     const endDate = new Date(eDate);
-    
+    console.log("hello");
     const daysdiff = Math.round((endDate.getTime() - startDate.getTime())/ (1000 * 3600 * 24));
     if(daysdiff<0){
-        // document.getElementById("error").innerText = "It appears your dates are inverted. Please correct."
+        document.getElementById("timeSeriesError").innerText = "It appears your dates are inverted. Please correct."
         return false;
     }
     else if(daysdiff == 0){
-        // document.getElementById("error").innerText = "It appears you are coming back on the same day as your departure. Please make sure this is correct."
+        document.getElementById("timeSeriesError").innerText = "Star and End Date are the same. Please make sure this is correct."
         return false;
 
     }
     else if(daysdiff > 365){
-        // document.getElementById("error").innerText = "It appears your travel is greater then 1 year. Please make sure this is correct."
+        document.getElementById("timeSeriesError").innerText = "The duration is greater then 1 year. Please make sure this is correct."
         return false;
     }
     else if(daysdiff > 30){
-        // document.getElementById("error").innerText = "You have a 30+ day duration. Please make sure your dates are correct."
+        document.getElementById("timeSeriesError").innerText = "You have a 30+ day duration. Please make sure your dates are correct."
         return true;
     }
     else{
-        // document.getElementById("error").innerText = "Your dates are correct"
+        document.getElementById("timeSeriesError").innerText = "Your dates are correct"
         return true;
     }
 }
 
 export function getStockTimeSeries(url, flag) {
+    console.log(url);
+    console.log(requestHeader);
+    console.log(flag);
     
     fetch(url,{url:url, headers:requestHeader})
     .then(response => {
@@ -178,17 +195,22 @@ export function getStockTimeSeries(url, flag) {
 }
 
 export function getLogoImage(ticker){
-    requestHeader.set('X-Api-Key', 'G/2qY/PHtg4XnsqAAjYEaw==i6SuCgt2h6RWpmrw')
+    const reqHeaders = new Headers();
+    reqHeaders.set("Content-Type", "application/json");
+    reqHeaders.set('X-Api-Key', 'G/2qY/PHtg4XnsqAAjYEaw==i6SuCgt2h6RWpmrw')
     const url = 'https://api.api-ninjas.com/v1/logo?ticker=' + ticker
-    fetch(url,{url:url, headers:requestHeader})
+    fetch(url,{url:url, headers:reqHeaders})
     .then(response => {
         return response.json();
     })
     .then(data => {
-        const imgSrc = data[0].image;
-        console.log(data);
-        const stockLogo = document.getElementById("stockLogo");
-        stockLogo.src = imgSrc;
+        if(data.length >0){
+            const imgSrc = data[0].image;
+            const stockLogo = document.getElementById("stockLogo");
+            stockLogo.src = imgSrc;
+
+        }
+        
     })
 }
 
@@ -224,7 +246,7 @@ export function getStockDetails(userInput){
 }
 
 
-export function getStockPrices(ticker, chartDates){
+export function getStockPrices(ticker, chartDates, tickerUnits){
     const url = "https://api.polygon.io/v2/aggs/ticker/"+ ticker +"/range/1/day/"+ chartDates[0] +"/"+ chartDates[chartDates.length - 1] +"?adjusted=true&sort=asc&apiKey="+API_KEY;
     // let chartData = [];
     return fetch(url, {url:url, headers:requestHeader})
@@ -236,10 +258,14 @@ export function getStockPrices(ticker, chartDates){
     })
     .then(data => {
         let stockPrices = [];
-        
+        // let localPortfolioDetails = JSON.parse(localStorage.getItem('portfolioDetails'));
         data.results.forEach(result => {
             stockPrices.push(result.c);
         })
+        // localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'] += data.results[data.results.length - 1].c * tickerUnits;
+        // localStorage.setItem('portfolioDetails',JSON.stringify(localPortfolioDetails));
+        // document.getElementById("portfolioValue").innerText = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'];
+
         // console.log(stockPrices);
         return {
             type:"scatter",

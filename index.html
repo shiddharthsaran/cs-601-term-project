@@ -9,6 +9,15 @@
     <link href="./styles/main.css" rel="stylesheet">
   </head>
   <body>
+	<div id="portfolios">
+		<button class="btn btn-success" id="addPortfolio">Add</button>
+		<ul id="portfolioLis">
+			<!-- <li id="portfolio1"><span>Portfolio 1</span><button class="btn btn-danger" id="deletePortfolio">Del</button></li> -->
+			
+		</ul>
+	</div>
+	<h4 id="portfolioValue"></h4>
+	<h4 id="userAmount"></h4>
     <h1 id="searchTitle">Stock Search</h1>
     <input type="text" id="searchInput" placeholder="Search for Stocks">
     <ul id="searchSuggestions"></ul>
@@ -36,14 +45,28 @@
         const searchTitle = document.getElementById("searchTitle");
         const searchSuggestions = document.getElementById("searchSuggestions");
         const searchBtn = document.getElementById("searchBtn");
-        const requestHeader = new Headers();
-        requestHeader.set("Content-Type", "application/json");
-        let userDetails = {
-          "userAmount":1000,
-          "userStocks":{},
-          "userFriends":{}
+		const portfolioValue = document.getElementById("portfolioValue");
+		const userAmount = document.getElementById("userAmount");
+		const addPortfolio = document.getElementById("addPortfolio");
+		
+
+
+        
+        let portfolioDetails = {
+			"currentPortfolioId":1,
+			"portfolioId":2,
+			1:{
+
+				"userAmount":1000,
+				"userStocks":{},
+				"userFriends":{},
+				"portfolioValue":0
+
+			}
+          
         };
         let stockUserSearchBool = true;
+		
         stockUserSearch.addEventListener("click", () => {
           if(stockUserSearchBool){
             searchTitle.innerText = "User Search";
@@ -74,31 +97,139 @@
           }
           
         })
-        searchBtn.addEventListener("click", function(){
-          const firstSuggestion = document.getElementById("searchSuggestions").firstChild;
-          let userInput;
-          if(firstSuggestion == null){
-            userInput = searchInput.value;
-          }
-          else{
-            userInput = firstSuggestion.innerText;
-          }
-          if (userInput.length > 0){
-            if(stockUserSearchBool){
-              console.log("stock " + userInput);
-            }
-            else{
-              console.log("user " + userInput);
-            }
-          }
-        })
-        let localUserDetails = JSON.parse(localStorage.getItem('userDetails'));
-        if(localUserDetails == null){
-          localStorage.setItem('userDetails',JSON.stringify(userDetails));
-          localUserDetails = JSON.parse(localStorage.getItem('userDetails'));
+        // searchBtn.addEventListener("click", function(){
+        //   const firstSuggestion = document.getElementById("searchSuggestions").firstChild;
+        //   let userInput;
+        //   if(firstSuggestion == null){
+        //     userInput = searchInput.value;
+        //   }
+        //   else{
+        //     userInput = firstSuggestion.innerText;
+        //   }
+        //   if (userInput.length > 0){
+        //     if(stockUserSearchBool){
+        //       console.log("stock " + userInput);
+        //     }
+        //     else{
+        //       console.log("user " + userInput);
+        //     }
+        //   }
+        // })
+        let localPortfolioDetails = JSON.parse(localStorage.getItem('portfolioDetails'));
+        if(localPortfolioDetails == null){
+          localStorage.setItem('portfolioDetails',JSON.stringify(portfolioDetails));
+          localPortfolioDetails = JSON.parse(localStorage.getItem('portfolioDetails'));
         }
-        // console.log(localUserDetails);
-        let userStocks = localUserDetails['userStocks'];
+		let currentPortfolioId;
+		const portfolioLis = document.getElementById("portfolioLis");
+		Object.keys(localPortfolioDetails).forEach( keyVal => {
+			if(keyVal == 'currentPortfolioId' || keyVal == 'portfolioId'){
+				currentPortfolioId = localPortfolioDetails['currentPortfolioId'];
+			}
+	
+			else{
+				const li = document.createElement("li");
+				li.id = "portfolio" + keyVal;
+				if(keyVal == localPortfolioDetails['currentPortfolioId']){
+					const span = document.createElement("span");
+					span.innerText = "Porfolio " + keyVal;
+					span.addEventListener("click", function(){
+						localPortfolioDetails["currentPortfolioId"] = keyVal;
+						localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
+						// console.log(localStorage.getItem("portfolioDetails"));
+						location.reload();
+					})
+					li.appendChild(span);
+
+
+				}
+				else{
+					const span = document.createElement("span");
+					span.innerText = "Porfolio " + keyVal;
+					span.addEventListener("click", function(){
+						localPortfolioDetails["currentPortfolioId"] = keyVal;
+						localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
+						// console.log(localStorage.getItem("portfolioDetails"));
+						location.reload();
+					})
+					const delBtn = document.createElement("button");
+					delBtn.classList.add("btn");
+					delBtn.classList.add("btn-danger");
+					delBtn.innerText = "Del";
+					li.appendChild(span);
+					li.appendChild(delBtn);
+					delBtn.addEventListener("click", function(){
+						const delLiId = Number(this.parentElement.id.replace("portfolio", ""));
+						delete localPortfolioDetails[delLiId];
+						localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
+						
+						portfolioLis.removeChild(this.parentElement);
+
+					})
+
+				}
+				portfolioLis.appendChild(li);
+
+			}
+		})
+		addPortfolio.addEventListener("click", () => {
+			if(Object.keys(localPortfolioDetails).length < 5){
+				localPortfolioDetails[localPortfolioDetails['portfolioId']] = {
+
+					"userAmount":1000,
+					"userStocks":{},
+					"userFriends":{},
+					"portfolioValue":0
+
+					}
+					const li = document.createElement("li");
+			li.id = "portfolio" + localPortfolioDetails['portfolioId'];
+			// li.innerHTML = "<span>Porfolio " + localPortfolioDetails['portfolioId'] + "</span><button class='btn btn-danger' id='deletePortfolio'>Del</button>"
+			const span = document.createElement("span");
+			const tempId = localPortfolioDetails['portfolioId'];
+			span.innerText = "Porfolio " + tempId;
+			span.addEventListener("click", function(){
+				localPortfolioDetails["currentPortfolioId"] = tempId;
+				localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
+				// console.log(localStorage.getItem("portfolioDetails"));
+				location.reload();
+			})
+			const delBtn = document.createElement("button");
+			delBtn.classList.add("btn");
+			delBtn.classList.add("btn-danger");
+			delBtn.innerText = "Del";
+			li.appendChild(span);
+			
+			delBtn.addEventListener("click", function(){
+				const delLiId = Number(this.parentElement.id.replace("portfolio", ""));
+				delete localPortfolioDetails[delLiId];
+				localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails));
+				portfolioLis.removeChild(this.parentElement);
+				
+
+			})
+			li.appendChild(delBtn);
+			portfolioLis.appendChild(li);
+			localPortfolioDetails['portfolioId'] += 1;
+			localStorage.setItem("portfolioDetails", JSON.stringify(localPortfolioDetails))
+
+			}
+			
+			
+			
+			
+			
+		})
+		// const deletePortfolio = document.getElementById("");
+		// deletePortfolio.addEventListener("click", () => {
+		// 	console.log(this.id);
+		// })
+		// console.log(localPortfolioDetails);
+        let userStocks = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userStocks'];
+		userAmount.innerText = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userAmount'].toFixed(2);
+		portfolioValue.innerText = localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['portfolioValue'].toFixed(2);
+		let totalPortfolioVal = 0;
+		
         let chartDates = [];
         let chartDataPromises = [];
         let currentDate = new Date();
@@ -124,7 +255,7 @@
         if(Object.keys(userStocks).length > 0){
           Object.keys(userStocks).forEach(ticker => {
 			if(userStocks[ticker] > 0){
-				chartDataPromises.push(getStockPrices(ticker, chartDates));
+				chartDataPromises.push(getStockPrices(ticker, chartDates, userStocks[ticker]));
 			}
             
             
