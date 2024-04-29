@@ -2,11 +2,40 @@
     display: none;
 }
 
-#stockNameLogo{
+#stockNameLogo, #buySellBtns{
     display: flex;
 }
 
 img{
     height: 32px;
     width: auto;
+}
+
+button.btn{
+    margin: 10px;
+}
+
+div div.timeSeries{
+    display: flex;
+    margin: 10px;
+}
+
+.wrapper{
+    background: var(--light-color);
+    padding: 1.5rem 4rem 3rem 4rem;
+    width: auto;
+    height: auto;
+    border-radius: 1.5rem;
+    position: relative;
+    box-shadow: 0 4px 6px rgb(255 255 255 / 10%), 0 1px 3px rgb(255 255 255 / 10%);
+}
+
+div div.timeSeriesError{
+    display: flex;
+}
+#candlestickChartContainer{
+    height: 325px;
+    width: auto;
+    
+
 }

@@ -9,8 +9,95 @@
     <link href="./styles/stockDetails.css" rel="stylesheet">
   </head>
   
-  <body>
-	<a id="homeBtn" href="index.html" class="btn btn-dark">Home</a>
+  <body class="bg-black">
+
+	<div class="container align-items-center justify-content-center wrapper text-white bg-dark">
+		<div class="col-lg-4 offset-lg-3 col-sm-4">
+			<a id="homeBtn" href="index.html" class="btn btn-light">Home</a>
+		</div>
+		<div>
+			<div class="col-lg-4 offset-lg-4 col-sm-4 offset-sm-5 col-4 offset-4">
+				<div id="stockNameLogo" class="justify-content-lg-center">
+					<img src="" id="stockLogo" alt="Stock Logo">
+					<p id="stockName"></p>
+				</div>
+			</div>
+			<div class="col-lg-6 offset-lg-3 col-sm-12">
+				<p>Description:</p>
+				<p id="description"></p>
+			</div>
+			<div class="col-lg-4 offset-lg-3 col-sm-12">
+				<p id="listDate"></h3>
+				<p id="tickerSymbol"></p>
+				<p id="marketCap"></p>
+			</div>
+			<div class="col-lg-4 offset-lg-3 col-sm-12">
+				<p>Latest Stock Price Details:</p>
+				<ul>
+					<li id="date"></li>
+					<li id="op"></li>
+					<li id="hp"></li>
+					<li id="lp"></li>
+					<li id="cp"></li>
+				</ul>
+			</div>
+			<div class="col-lg-4 offset-lg-4 col-sm-6 offset-sm-5 col-8 offset-3">
+				<div id="buySellBtns" class="justify-content-lg-center">
+					<button id="buyBtn" class="btn btn-primary">Buy</button>
+					<button id="sellBtn" class="btn btn-warning">Sell</button>
+				</div>
+			</div>
+			<div class="col-lg-6 offset-lg-3 col-sm-12 col-8 offset-1">
+				<div id="buyDiv">
+					<label for="stockQuantity">Select Stock Quantity to buy:</label>
+					<input id="stockQuantity" type="number" step="0.1" min="0.1" value="0.1">
+					<button id="checkoutBtn" class="btn btn-success">Confirm</button>
+					<button id="buyBackBtn" class="btn btn-light">Back</button>
+					<div class="col-lg-6 offset-lg-3 col-sm-6 offset-sm-3 col-12 justify-content-lg-center">
+						<div>
+							<p id="stockBuyMsg"></p>
+						</div>
+
+					</div>
+					
+					
+				</div>
+			</div>
+			<div class="col-lg-6 offset-lg-3 col-sm-12 col-8 offset-1">
+				<div id="sellDiv">
+					<label for="stockSellQuantity">Select Stock Quantity to sell:</label>
+					<input id="stockSellQuantity" type="number" min="0.1" step="0.1">
+					<button id="sellConfirmBtn" class="btn btn-success">Confirm</button>
+					<button id="sellBackBtn" class="btn btn-light">Back</button>
+					<div class="col-lg-6 offset-lg-3 col-sm-6 offset-sm-3 col-12 justify-content-lg-center">
+						<div>
+							<p id="stockSellMsg"></p>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+			<div class="col-lg-6 offset-lg-3 col-sm-12">
+				<div id="candlestickChartContainer"></div>
+				<div class="justify-content-lg-center timeSeries">
+					<input type="date" id="startDate">
+					<input type="date" id="endDate">
+					<button class="btn btn-secondary" id="timeSeriesBtn">Submit</button>
+					
+				</div>
+				<div class="col-lg-6 offset-lg-3 col-sm-12 offset-sm-3 col-8 offset-3  justify-content-lg-center">
+					<div class="justify-content-lg-center timeSeriesError">
+						<p id="timeSeriesError"></p>
+					</div>
+					
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+	<!-- <a id="homeBtn" href="index.html" class="btn btn-dark">Home</a>
     <div id="stockDetails">
 		<div id="stockNameLogo">
 			<img src="" id="stockLogo" alt="Stock Logo">
@@ -57,7 +144,7 @@
 			<input type="date" id="endDate">
 			<button class="btn btn-secondary" id="timeSeriesBtn">Submit</button>
 			<p id="timeSeriesError"></p>
-		</div>
+		</div> -->
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 		<script type="module">
         import {getStockDetails} from './modules/main.js'
@@ -160,7 +247,7 @@
 			})
 
 			buyBackBtn.addEventListener("click", function(){
-				buySellBtns.style.display = "block";
+				buySellBtns.style.display = "flex";
 				buyDiv.style.display = "none";
 				if(localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userStocks'].hasOwnProperty(ticker)){
 					if(localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userStocks'][ticker] > 0){
@@ -174,7 +261,7 @@
 			})
 
 			sellBackBtn.addEventListener("click", function(){
-				buySellBtns.style.display = "block";
+				buySellBtns.style.display = "flex";
 				sellDiv.style.display = "none";
 				if(localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userStocks'].hasOwnProperty(ticker)){
 					if(localPortfolioDetails[localPortfolioDetails['currentPortfolioId']]['userStocks'][ticker] <= 0){

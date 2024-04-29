@@ -35,7 +35,7 @@ input.input-css{
 
 #portfolioGraph{
     height: 325px;
-    width: 325px;
+    width: auto;
 }
 
 .wrapper{
