@@ -59,23 +59,38 @@ export function getStockSearch(userInput){
     
 }
 
+class PortfolioClass {
+    
+
+    getDetails() {
+        return {
+
+            "userAmount":1000,
+            "userStocks":{},
+            "userFriends":{},
+            "portfolioValue":0
+
+            };
+    }
+}
+
+export default PortfolioClass;
 
 
-export function formatDate(date) {
+export const formatDate = function(date) {
     const year = date.getFullYear();
     const month = ('0' + (date.getMonth() + 1)).slice(-2);
     const day = ('0' + date.getDate()).slice(-2);
     return year + '-' + month + '-' + day;
 }
 
-export function checkStartEndDate(sDate, eDate){
+export const checkStartEndDate = (sDate, eDate) =>{
     if(sDate.length ==0 || eDate.length == 0){
         document.getElementById("timeSeriesError").innerText = "Enter Dates."
         return false;
     }
     const startDate = new Date(sDate);
     const endDate = new Date(eDate);
-    console.log("hello");
     const daysdiff = Math.round((endDate.getTime() - startDate.getTime())/ (1000 * 3600 * 24));
     if(daysdiff<0){
         document.getElementById("timeSeriesError").innerText = "It appears your dates are inverted. Please correct."
@@ -101,9 +116,7 @@ export function checkStartEndDate(sDate, eDate){
 }
 
 export function getStockTimeSeries(url, flag) {
-    console.log(url);
-    console.log(requestHeader);
-    console.log(flag);
+
     
     fetch(url,{url:url, headers:requestHeader})
     .then(response => {

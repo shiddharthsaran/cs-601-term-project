@@ -8,7 +8,7 @@
 img + p{
     font-size: 32px;
 }
-img{
+div #stockLogo{
     height: 32px;
     width: auto;
 }

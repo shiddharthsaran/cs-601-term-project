@@ -1,5 +1,6 @@
 div p{
-    padding-left: 20px;
+    font-size: 30px;
+    padding-left: 0;
 }
 
 div div{
@@ -76,13 +77,13 @@ div #searchTitle + input + ul li{
     font-size: 20px;
 }
 
-ul + p {
+ul + #portfolioValue {
     padding-left: 0;
     font-size: 20px;
 } 
 
 
-ul + p + p {
+ul + p + #userAmount {
     padding-left: 0;
     font-size: 20px;
 } 
@@ -96,10 +97,7 @@ div img{
     width: 25%;
 }
 
-div > p{
-    font-size: 30px;
-    padding-left: 0;
-}
+    
 
 #portfolioValue{
     font-size: 20px;
